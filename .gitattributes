@@ -1,0 +1,35 @@
+# Auto detect text files, normalize line endings to LF trong repo
+* text=auto eol=lf
+
+# Text files rõ ràng — luôn LF (kể cả trên Windows)
+*.cs        text eol=lf
+*.csproj    text eol=lf
+*.sln       text eol=lf
+*.json      text eol=lf
+*.ts        text eol=lf
+*.tsx       text eol=lf
+*.js        text eol=lf
+*.jsx       text eol=lf
+*.css       text eol=lf
+*.scss      text eol=lf
+*.md        text eol=lf
+*.yml       text eol=lf
+*.yaml      text eol=lf
+*.sh        text eol=lf
+*.gitignore text eol=lf
+*.gitattributes text eol=lf
+
+# File Windows-only cần giữ CRLF (nếu có script .bat/.ps1)
+*.bat  text eol=crlf
+*.ps1  text eol=crlf
+
+# Binary — không đụng vào, không cố diff
+*.png  binary
+*.jpg  binary
+*.jpeg binary
+*.gif  binary
+*.ico  binary
+*.woff binary
+*.woff2 binary
+*.ttf  binary
+*.eot  binary
