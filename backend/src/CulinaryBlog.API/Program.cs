@@ -1,3 +1,4 @@
+using CulinaryBlog.API.Endpoints;
 using CulinaryBlog.Application;
 using CulinaryBlog.Infrastructure;
 using CulinaryBlog.Infrastructure.Persistence;
@@ -30,5 +31,6 @@ if (args.Contains("--seed", StringComparer.OrdinalIgnoreCase))
 }
 
 app.MapGet("/", () => "Hello World!");
+app.MapRecipeIngredientEndpoints();
 
 app.Run();
