@@ -141,7 +141,7 @@ public sealed class RecipeService : IRecipeService
         recipe.Status,
         recipe.Ingredients
             .OrderBy(i => i.OrderIndex)
-            .Select(i => new RecipeIngredientDto(i.Name, i.Quantity, i.Unit, i.Notes, i.OrderIndex))
+            .Select(i => new RecipeIngredientDto(i.Id, i.Name, i.Quantity, i.Unit, i.Notes, i.OrderIndex))
             .ToList(),
         recipe.Steps
             .OrderBy(s => s.StepNumber)

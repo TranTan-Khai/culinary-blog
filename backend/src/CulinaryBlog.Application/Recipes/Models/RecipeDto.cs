@@ -31,6 +31,7 @@ public sealed record RecipeDetailDto(
     IReadOnlyList<RecipeStepDto> Steps);
 
 public sealed record RecipeIngredientDto(
+    Guid Id,
     string Name,
     decimal? Quantity,
     string? Unit,
