@@ -15,5 +15,7 @@ public interface IRecipeRepository : IRepository<Recipe>
         string? sort = null,
         CancellationToken cancellationToken = default);
 
+    Task<Recipe?> GetByIdWithIngredientsAsync(Guid id, CancellationToken cancellationToken = default);
+
     Task<bool> SlugExistsAsync(string slug, CancellationToken cancellationToken = default);
 }

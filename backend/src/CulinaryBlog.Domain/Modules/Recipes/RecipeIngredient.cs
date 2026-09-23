@@ -27,4 +27,14 @@ public class RecipeIngredient : BaseEntity
             Notes = notes
         };
     }
+
+    public void Update(string name, decimal? quantity, string? unit, int orderIndex, string? notes = null)
+    {
+        Name = name;
+        Quantity = quantity;
+        Unit = unit;
+        OrderIndex = orderIndex;
+        Notes = notes;
+        UpdatedAt = DateTimeOffset.UtcNow;
+    }
 }
