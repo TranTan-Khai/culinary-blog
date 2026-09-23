@@ -1,17 +1,9 @@
-<<<<<<< HEAD
 using CulinaryBlog.API.Endpoints;
-using CulinaryBlog.Application;
-using CulinaryBlog.Infrastructure.Storage;
-
-var builder = WebApplication.CreateBuilder(args);
-
-builder.Services.AddApplicationServices();
-builder.Services.AddMinioStorage(builder.Configuration);
-=======
 using CulinaryBlog.Application;
 using CulinaryBlog.Infrastructure;
 using CulinaryBlog.Infrastructure.Persistence;
 using CulinaryBlog.Infrastructure.Persistence.Seed;
+using CulinaryBlog.Infrastructure.Storage;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -21,9 +13,10 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
 
+builder.Services.AddApplicationServices();
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
->>>>>>> e9fae1ea82f2c42284d778f15aa7220511269534
+builder.Services.AddMinioStorage(builder.Configuration);
 
 var app = builder.Build();
 

@@ -1,9 +1,9 @@
 using System.Reflection;
+using CulinaryBlog.Application.Categories.Services;
 using CulinaryBlog.Application.Common.Behaviors;
+using CulinaryBlog.Application.Recipes.Services;
 using FluentValidation;
 using MediatR;
-using CulinaryBlog.Application.Categories.Services;
-using CulinaryBlog.Application.Recipes.Services;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace CulinaryBlog.Application;
@@ -22,7 +22,6 @@ public static class DependencyInjection
 
         return services;
     }
-}
 
     public static IServiceCollection AddApplication(this IServiceCollection services)
     {

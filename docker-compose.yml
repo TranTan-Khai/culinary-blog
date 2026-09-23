@@ -1,16 +1,21 @@
-
 services:
   postgres:
     image: postgres:16-alpine
-    container_name: culinary-postgres
+    container_name: culinaryblog-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: culinaryblog
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
     ports:
       - "5432:5432"
-    environment:
-      POSTGRES_DB: CulinaryBlogDb
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: YourPassword123!
     volumes:
-      - pgdata:/var/lib/postgresql/data
+      - culinaryblog-postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d culinaryblog"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
 
   redis:
     image: redis:7-alpine
@@ -51,28 +56,7 @@ services:
       - "1025:1025"
 
 volumes:
-  pgdata:
+  culinaryblog-postgres-data:
   redisdata:
   miniodata:
   seqdata:
-services:
-  postgres:
-    image: postgres:16-alpine
-    container_name: culinaryblog-postgres
-    restart: unless-stopped
-    environment:
-      POSTGRES_DB: culinaryblog
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-    ports:
-      - "5432:5432"
-    volumes:
-      - culinaryblog-postgres-data:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres -d culinaryblog"]
-      interval: 5s
-      timeout: 5s
-      retries: 10
-
-volumes:
-  culinaryblog-postgres-data:
