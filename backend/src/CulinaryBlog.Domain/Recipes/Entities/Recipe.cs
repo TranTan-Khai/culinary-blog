@@ -13,8 +13,9 @@ public class Recipe
     public string? ThumbnailUrl { get; set; }
     public RecipeStatus Status { get; set; }
     public bool IsDeleted { get; set; }
+    public Guid AuthorId { get; set; }
+    public ICollection<RecipeImage> Images { get; set; } = new List<RecipeImage>();
     
     // We use a mapping in DbContext, but if we need SearchVector property:
     public NpgsqlTsVector? SearchVector { get; set; }
 }
-

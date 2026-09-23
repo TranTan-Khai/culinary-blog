@@ -1,4 +1,4 @@
-# Cấu Hình Hệ Thống Cho Roo Code Agent - Culinary Blog Project
+# Cấu Hình Hệ Thống Cho AI Agent - Culinary Blog Project
 
 ## 1. TỔNG QUAN HỆ THỐNG VÀ BẮT CẦU GIỮA CÁC VAI TRÒ (SYSTEM CONTEXT)
 Dự án được chia thành 4 phần chính. Bạn chịu trách nhiệm chính ở PHẦN 3, nhưng phải tuân thủ giao tiếp chuẩn với 3 phần còn lại:
@@ -58,7 +58,7 @@ Dự án được chia thành 4 phần chính. Bạn chịu trách nhiệm chín
 
 ---
 
-## 4. QUY TRÌNH HÀNH ĐỘNG CHO ROO CODE AGENT (WORKFLOW)
+## 4. QUY TRÌNH HÀNH ĐỘNG CHO AI AGENT (WORKFLOW)
 1. Trước khi tạo/sửa code: Phân tích file hiện có trong thư mục để tránh trùng lặp cấu trúc.
 2. Viết code sạch, tự tạo file DTO/Command/Query/Handler/Validator đồng bộ đúng vị trí tầng tương ứng.
 3. Không tự ý sửa đổi code của Phần 1 & 2 trừ khi cần bổ sung Interface/Extension cho Phần 3.
