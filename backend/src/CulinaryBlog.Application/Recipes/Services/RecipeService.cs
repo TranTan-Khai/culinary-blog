@@ -132,19 +132,36 @@ public sealed class RecipeService : IRecipeService
         recipe.Slug,
         recipe.Description,
         recipe.Instructions,
-        recipe.CategoryId,
-        recipe.AuthorId,
         recipe.PrepTime,
         recipe.CookTime,
         recipe.Servings,
         recipe.Difficulty,
         recipe.Status,
+        recipe.PublishedAt,
+        recipe.Category is null
+            ? null
+            : new RecipeCategoryDto(recipe.Category.Id, recipe.Category.Name, recipe.Category.Slug),
+        recipe.Author is null
+            ? null
+            : new RecipeAuthorDto(recipe.Author.Id, recipe.Author.DisplayName, recipe.Author.AvatarUrl),
+        recipe.Images
+            .OrderByDescending(i => i.IsPrimary)
+            .ThenBy(i => i.OrderIndex)
+            .Select(i => new RecipeImageDto(i.Id, i.OriginalUrl, i.AltText, i.IsPrimary, i.OrderIndex))
+            .ToList(),
+        new RecipeNutritionDto(
+            recipe.Nutrition.Calories,
+            recipe.Nutrition.Protein,
+            recipe.Nutrition.Carbohydrates,
+            recipe.Nutrition.Fat,
+            recipe.Nutrition.Fiber,
+            recipe.Nutrition.Sodium),
         recipe.Ingredients
             .OrderBy(i => i.OrderIndex)
             .Select(i => new RecipeIngredientDto(i.Id, i.Name, i.Quantity, i.Unit, i.Notes, i.OrderIndex))
             .ToList(),
         recipe.Steps
             .OrderBy(s => s.StepNumber)
-            .Select(s => new RecipeStepDto(s.StepNumber, s.Title, s.Description, s.TimerMinutes))
+            .Select(s => new RecipeStepDto(s.Id, s.StepNumber, s.Title, s.Description, s.TimerMinutes))
             .ToList());
 }
