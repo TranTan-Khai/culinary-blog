@@ -31,6 +31,7 @@ if (args.Contains("--seed", StringComparer.OrdinalIgnoreCase))
 }
 
 app.MapGet("/", () => "Hello World!");
+app.MapRecipeEndpoints();
 app.MapRecipeIngredientEndpoints();
 
 app.Run();

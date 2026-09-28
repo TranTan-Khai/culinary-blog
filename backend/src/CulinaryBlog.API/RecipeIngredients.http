@@ -3,7 +3,7 @@
 ### baseUrl lấy theo profile "http" trong Properties/launchSettings.json.
 ### recipeId: lấy từ DB sau khi seed:  SELECT "Id" FROM "Recipes" LIMIT 1;
 
-@baseUrl = http://localhost:3000
+@baseUrl = http://localhost:5000
 @recipeId = 00000000-0000-0000-0000-000000000000
 @ingredientId = 00000000-0000-0000-0000-000000000000
 
