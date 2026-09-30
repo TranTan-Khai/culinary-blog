@@ -1,3 +1,11 @@
+using System.Text;
+using CulinaryBlog.Application.DTOs.Auth;
+using CulinaryBlog.Domain.Entities;
+using CulinaryBlog.Infrastructure.Data;
+using CulinaryBlog.Infrastructure.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using CulinaryBlog.API.Endpoints;
 using CulinaryBlog.API.Middleware;
 using CulinaryBlog.Application;
@@ -7,9 +15,48 @@ using CulinaryBlog.Infrastructure.Persistence.Seed;
 using CulinaryBlog.Infrastructure.Jobs;
 using Hangfire;
 using Hangfire.PostgreSql;
-using Microsoft.EntityFrameworkCore;
 
+
+// ===============================
+// DATABASE
+// ===============================
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddDbContext<CulinaryBlogDbContext>(options =>
+{
+    options.UseNpgsql(
+        builder.Configuration.GetConnectionString("DefaultConnection")
+    );
+});
+
+// ===============================
+// AUTHENTICATION JWT
+// ===============================
+
+builder.Services
+    .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+
+            ValidIssuer = builder.Configuration["Jwt:Issuer"],
+            ValidAudience = builder.Configuration["Jwt:Audience"],
+
+            IssuerSigningKey = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes(
+                    builder.Configuration["Jwt:Key"]!
+                )
+            )
+        };
+    });
+
+// AUTHORIZATION
+    builder.Services.AddAuthorization();
 
 // Keep local development logs on the console; Windows EventLog may require
 // administrator permissions and can mask the original database exception.
@@ -46,6 +93,10 @@ builder.Services.AddProblemDetails(options =>
 
 var app = builder.Build();
 
+app.UseAuthentication();
+app.UseAuthorization();
+
+app.MapGet("/", () => "Hé nhô!");
 
 
 // Apply schema migrations on startup, but seed only when explicitly requested.
@@ -66,7 +117,6 @@ app.UseMiddleware<GlobalExceptionMiddleware>();
 // Response lỗi không có body (vd. 404 do sai route, 405) cũng trả về ProblemDetails.
 app.UseStatusCodePages();
 
-app.MapGet("/", () => "Hello World!");
 
 app.MapRecipeEndpoints();
 
