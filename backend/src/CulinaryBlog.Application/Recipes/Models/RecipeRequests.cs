@@ -29,7 +29,15 @@ public sealed record CreateIngredientRequest(
     string Name,
     decimal? Quantity,
     string? Unit,
-    string? Notes = null);
+    string? Notes = null,
+    int? OrderIndex = null);
+
+public sealed record UpdateIngredientRequest(
+    string Name,
+    decimal? Quantity,
+    string? Unit,
+    string? Notes,
+    int OrderIndex);
 
 public sealed record CreateStepRequest(
     string Title,

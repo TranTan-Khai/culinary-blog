@@ -1,3 +1,4 @@
+using CulinaryBlog.API.Endpoints;
 using CulinaryBlog.Application;
 using CulinaryBlog.Infrastructure;
 using CulinaryBlog.Infrastructure.Persistence;
@@ -50,6 +51,7 @@ if (args.Contains("--seed", StringComparer.OrdinalIgnoreCase))
 }
 
 app.MapGet("/", () => "Hello World!");
+
 app.UseHangfireDashboard("/hangfire");
 
 app.Lifetime.ApplicationStarted.Register(() =>
@@ -59,5 +61,8 @@ app.Lifetime.ApplicationStarted.Register(() =>
     methodCall: j => j.Execute("scheduled ping"),
     cronExpression: "* * * * *");
 });
+
+app.MapRecipeIngredientEndpoints();
+
 
 app.Run();

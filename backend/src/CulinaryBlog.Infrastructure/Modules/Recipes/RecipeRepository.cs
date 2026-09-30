@@ -50,6 +50,14 @@ public class RecipeRepository : IRecipeRepository
         return (items, totalCount);
     }
 
+    public async Task<Recipe?> GetByIdWithIngredientsAsync(Guid id, CancellationToken cancellationToken = default) =>
+        await _context.Recipes
+            .Include(r => r.Ingredients)
+            .FirstOrDefaultAsync(r => r.Id == id, cancellationToken);
+
+    public void AddIngredient(RecipeIngredient ingredient) =>
+        _context.Entry(ingredient).State = EntityState.Added;
+
     public async Task<bool> SlugExistsAsync(string slug, CancellationToken cancellationToken = default) =>
         await _context.Recipes.AnyAsync(r => r.Slug == slug, cancellationToken);
 

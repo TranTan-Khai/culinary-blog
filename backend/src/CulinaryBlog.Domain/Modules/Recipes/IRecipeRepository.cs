@@ -15,5 +15,13 @@ public interface IRecipeRepository : IRepository<Recipe>
         string? sort = null,
         CancellationToken cancellationToken = default);
 
+    Task<Recipe?> GetByIdWithIngredientsAsync(Guid id, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Đánh dấu nguyên liệu mới là Added. Cần thiết vì Id được sinh sẵn ở client:
+    /// nếu chỉ thêm vào collection, EF sẽ hiểu nhầm là bản ghi cũ và sinh UPDATE.
+    /// </summary>
+    void AddIngredient(RecipeIngredient ingredient);
+
     Task<bool> SlugExistsAsync(string slug, CancellationToken cancellationToken = default);
 }

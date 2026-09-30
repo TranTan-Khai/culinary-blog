@@ -84,10 +84,29 @@ public class Recipe : BaseEntity
         _steps.Add(RecipeStep.Create(Id, stepNumber, title, description, timerMinutes));
     }
 
-    public void AddIngredient(string name, decimal? quantity, string? unit, string? notes = null)
+    /// <summary>
+    /// Thêm nguyên liệu. Không truyền orderIndex thì nguyên liệu được xếp cuối danh sách.
+    /// </summary>
+    public RecipeIngredient AddIngredient(
+        string name,
+        decimal? quantity,
+        string? unit,
+        string? notes = null,
+        int? orderIndex = null)
     {
-        var orderIndex = _ingredients.Count;
-        _ingredients.Add(RecipeIngredient.Create(Id, name, quantity, unit, orderIndex, notes));
+        var ingredient = RecipeIngredient.Create(
+            Id, name, quantity, unit, orderIndex ?? _ingredients.Count, notes);
+        _ingredients.Add(ingredient);
+        return ingredient;
+    }
+
+    public RecipeIngredient? FindIngredient(Guid ingredientId) =>
+        _ingredients.FirstOrDefault(i => i.Id == ingredientId);
+
+    public bool RemoveIngredient(Guid ingredientId)
+    {
+        var ingredient = FindIngredient(ingredientId);
+        return ingredient is not null && _ingredients.Remove(ingredient);
     }
 
     public void AddImage(string originalUrl, bool isPrimary = false, string? altText = null)
