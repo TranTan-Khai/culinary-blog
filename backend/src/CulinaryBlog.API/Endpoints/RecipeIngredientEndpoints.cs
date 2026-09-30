@@ -1,4 +1,3 @@
-using CulinaryBlog.Application.Common.Exceptions;
 using CulinaryBlog.Application.Recipes.Models;
 using CulinaryBlog.Application.Recipes.Services;
 
@@ -22,60 +21,33 @@ public static class RecipeIngredientEndpoints
         return app;
     }
 
-    private static Task<IResult> AddAsync(
+    private static async Task<IResult> AddAsync(
         Guid recipeId,
         CreateIngredientRequest request,
         IRecipeIngredientService service,
-        CancellationToken cancellationToken) =>
-        HandleAsync(async () =>
-        {
-            var ingredient = await service.AddAsync(recipeId, request, cancellationToken);
-            return Results.Created(
-                $"/api/v1/recipes/{recipeId}/ingredients/{ingredient.Id}",
-                ingredient);
-        });
+        CancellationToken cancellationToken)
+    {
+        var ingredient = await service.AddAsync(recipeId, request, cancellationToken);
+        return Results.Created(
+            $"/api/v1/recipes/{recipeId}/ingredients/{ingredient.Id}",
+            ingredient);
+    }
 
-    private static Task<IResult> UpdateAsync(
+    private static async Task<IResult> UpdateAsync(
         Guid recipeId,
         Guid ingredientId,
         UpdateIngredientRequest request,
         IRecipeIngredientService service,
         CancellationToken cancellationToken) =>
-        HandleAsync(async () =>
-            Results.Ok(await service.UpdateAsync(recipeId, ingredientId, request, cancellationToken)));
+        Results.Ok(await service.UpdateAsync(recipeId, ingredientId, request, cancellationToken));
 
-    private static Task<IResult> DeleteAsync(
+    private static async Task<IResult> DeleteAsync(
         Guid recipeId,
         Guid ingredientId,
         IRecipeIngredientService service,
-        CancellationToken cancellationToken) =>
-        HandleAsync(async () =>
-        {
-            await service.DeleteAsync(recipeId, ingredientId, cancellationToken);
-            return Results.NoContent();
-        });
-
-    /// <summary>
-    /// Chuyển exception của Application sang RFC 7807. Tạm thời đặt ở đây cho tới khi
-    /// có GlobalExceptionMiddleware dùng chung.
-    /// </summary>
-    private static async Task<IResult> HandleAsync(Func<Task<IResult>> action)
+        CancellationToken cancellationToken)
     {
-        try
-        {
-            return await action();
-        }
-        catch (ValidationException ex)
-        {
-            return Results.ValidationProblem(
-                ex.Errors,
-                statusCode: StatusCodes.Status422UnprocessableEntity);
-        }
-        catch (NotFoundException ex)
-        {
-            return Results.Problem(
-                detail: ex.Message,
-                statusCode: StatusCodes.Status404NotFound);
-        }
+        await service.DeleteAsync(recipeId, ingredientId, cancellationToken);
+        return Results.NoContent();
     }
 }

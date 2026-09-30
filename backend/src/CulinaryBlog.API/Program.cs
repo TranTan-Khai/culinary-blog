@@ -1,4 +1,5 @@
 using CulinaryBlog.API.Endpoints;
+using CulinaryBlog.API.Middleware;
 using CulinaryBlog.Application;
 using CulinaryBlog.Infrastructure;
 using CulinaryBlog.Infrastructure.Persistence;
@@ -15,6 +16,16 @@ builder.Logging.AddConsole();
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
 
+// RFC 7807: mọi lỗi trả về application/problem+json kèm traceId và instance.
+builder.Services.AddProblemDetails(options =>
+{
+    options.CustomizeProblemDetails = context =>
+    {
+        context.ProblemDetails.Instance ??=
+            $"{context.HttpContext.Request.Method} {context.HttpContext.Request.Path}";
+    };
+});
+
 var app = builder.Build();
 
 // Apply schema migrations on startup, but seed only when explicitly requested.
@@ -29,6 +40,11 @@ if (args.Contains("--seed", StringComparer.OrdinalIgnoreCase))
     await app.Services.SeedCulinaryBlogDataAsync();
     return;
 }
+
+// Đặt đầu pipeline để bắt exception từ mọi middleware/endpoint phía sau.
+app.UseMiddleware<GlobalExceptionMiddleware>();
+// Response lỗi không có body (vd. 404 do sai route, 405) cũng trả về ProblemDetails.
+app.UseStatusCodePages();
 
 app.MapGet("/", () => "Hello World!");
 app.MapRecipeEndpoints();
