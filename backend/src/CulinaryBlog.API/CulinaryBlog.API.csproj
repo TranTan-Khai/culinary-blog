@@ -3,6 +3,10 @@
   <ItemGroup>
     <ProjectReference Include="..\CulinaryBlog.Infrastructure\CulinaryBlog.Infrastructure.csproj" />
     <ProjectReference Include="..\CulinaryBlog.Application\CulinaryBlog.Application.csproj" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
 
   <PropertyGroup>
