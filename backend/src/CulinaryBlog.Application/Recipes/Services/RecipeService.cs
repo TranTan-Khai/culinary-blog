@@ -55,7 +55,7 @@ public sealed class RecipeService : IRecipeService
         ValidateRequest(request);
 
         if (await _recipes.SlugExistsAsync(request.Slug.Trim(), cancellationToken))
-            throw new InvalidOperationException($"Recipe slug '{request.Slug}' already exists.");
+            throw new ConflictException($"Recipe slug '{request.Slug}' already exists.");
 
         var recipe = Recipe.Create(
             request.Title.Trim(),

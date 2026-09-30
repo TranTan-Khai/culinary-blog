@@ -1,4 +1,5 @@
 using CulinaryBlog.API.Endpoints;
+using CulinaryBlog.API.Middleware;
 using CulinaryBlog.Application;
 using CulinaryBlog.Infrastructure;
 using CulinaryBlog.Infrastructure.Persistence;
@@ -33,6 +34,16 @@ builder.Services.AddHangfireServer();
 // 3. Đăng ký chính job class vào DI (để Hangfire resolve dependency của nó, ví dụ ILogger)
 builder.Services.AddScoped<PingJob>();
 
+// RFC 7807: mọi lỗi trả về application/problem+json kèm traceId và instance.
+builder.Services.AddProblemDetails(options =>
+{
+    options.CustomizeProblemDetails = context =>
+    {
+        context.ProblemDetails.Instance ??=
+            $"{context.HttpContext.Request.Method} {context.HttpContext.Request.Path}";
+    };
+});
+
 var app = builder.Build();
 
 
@@ -49,6 +60,11 @@ if (args.Contains("--seed", StringComparer.OrdinalIgnoreCase))
     await app.Services.SeedCulinaryBlogDataAsync();
     return;
 }
+
+// Đặt đầu pipeline để bắt exception từ mọi middleware/endpoint phía sau.
+app.UseMiddleware<GlobalExceptionMiddleware>();
+// Response lỗi không có body (vd. 404 do sai route, 405) cũng trả về ProblemDetails.
+app.UseStatusCodePages();
 
 app.MapGet("/", () => "Hello World!");
 
